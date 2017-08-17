@@ -77,6 +77,12 @@ class UIDone(m:Map[String,Integer]) extends MainFrame { //Após buscar os mapas,
       }
     }
     contents += Swing.VStrut(30)
+    contents += new Label("Total de palavras:") //Usando a função TotalWords, a quantidade de palavra total
+    contents += Swing.HStrut(10)
+    contents += new Label{
+      text = TotalWords(fillLabelsInteger(m)).toString
+    }
+    contents += Swing.VStrut(30)
     contents += new Label("Palavra com maior frequência:") //Usando a função MostCommon, a palavra mais frequente aparece aqui
     contents += Swing.HStrut(10)
     contents += new Label{
@@ -107,6 +113,9 @@ class UIDone(m:Map[String,Integer]) extends MainFrame { //Após buscar os mapas,
   }
   def Largest(l:List[String]):Integer = { //Função Largest, aplicada em Statistic
     Statistic( for(e <- l) yield e.size.asInstanceOf[java.lang.Integer], _ > _ )
+  }
+  def TotalWords(l:List[Integer]):Integer = {
+    l.foldLeft(0)((a,b) => a + b)
   }
   def fillLabelsInteger(m:Map[String,Integer]):List[Integer] = { //Função que retorna a parte Inteira do map
     def go(m:Map[String,Integer], s:List[Integer]):List[Integer] = {
