@@ -1,5 +1,4 @@
 import akka.actor._
-import scala.util._
 import swing._
 import swing.event._
 import scala.concurrent
@@ -17,8 +16,8 @@ class UIGreet extends MainFrame { //UI de boas vindas, faz nada, só pula pro UI
 }
 
 class UIMain extends MainFrame { //Nesse UI o usuário coloca o texto para procurar as palavras
-  /*val SearchWords = new TextField{text = ""} <---- se possível, implementar as partes de busca por palavra/número mín de palavras
-  var nPalavras = new TextField{text = "0"}*/
+  val SearchWords = new TextField{text = ""}
+  var nPalavras = new TextField{text = "0"}
   val TextoMain = new TextArea{rows = 50; lineWrap = true; wordWrap = true}
   val buttonSearch = new Button("Relizar busca")
   title = "Palavras a buscar"
@@ -219,20 +218,6 @@ object Main { //Objeto Main, onde ocorre a consolidação dos mapas
     }
     def unset = synchronized {
       isDefined = false
-    }
-  }
-  
-  def MapR(m:Map[String,Integer]) {
-    var m:Map[String, Integer] = Map()
-    
-    def receiveMap(m1:Map[String,Integer], m2:Map[String,Integer]):Map[String,Integer] = {
-      def go(m1:Map[String,Integer], m2:Map[String,Integer], mM:Map[String,Integer]):Map[String,Integer] = {
-        if (m1.isEmpty) m2 ++ mM
-        else if (m2.isEmpty) m1 ++ mM
-        else if(m1.get(m2.head._1) == None) go(m2.tail, m1, mM + (m2.head._1->m2.head._2))
-        else go(m2.tail, m1.-(m2.head._1), mM + (m2.head._1->(m1(m2.head._1) + m2.head._2)))
-      }
-      go(m1,m2,Map())
     }
   }
   
