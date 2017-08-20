@@ -37,7 +37,7 @@ class UIMain extends MainFrame { //Nesse UI o usuário coloca o texto para procu
       }
     contents += Swing.VStrut(10)*/
     contents += new Label("Texto a se buscar palavras:")
-    contents += TextoMain
+    contents += new ScrollPane(TextoMain)
     contents += Swing.VStrut(20)
     contents += buttonSearch
     for(e<-contents) //empurra tudo para a esquerda
@@ -57,45 +57,52 @@ class UIMain extends MainFrame { //Nesse UI o usuário coloca o texto para procu
 }
 
 
-
 class UIDone(m:Map[String,Integer]) extends MainFrame { //Após buscar os mapas, a UIDone é a última do programa (se possível,
-  var labelWord = new ListView(fillLabelsString(m))     //implementar um loop entre UIDone e UIMain)
-  var labelTimes = new ListView(fillLabelsInteger(m)) //Listas baseadas no mapa adquirido
+  var labelWord = fillLabelsString(m) toArray           //implementar um loop entre UIDone e UIMain)
+  var labelTimes = fillLabelsInteger(m) toArray //Listas baseadas no mapa adquirido
+  var ArraysToTable = Array(labelWord, for( e <- labelTimes) yield e.toString)
+  var tableWords = new Table(labelWord.length, 2)
+  for(e <- 0 to labelWord.length - 1) {
+    tableWords(e,0) = labelWord(e)
+    tableWords(e,1) = labelTimes(e)
+  }
   title = "Palavras encontradas"
   contents = new BoxPanel(Orientation.Vertical){
+    contents += new ScrollPane(tableWords)
+    contents += Swing.VStrut(30)
     contents += new BoxPanel(Orientation.Horizontal){
-      contents += new BoxPanel(Orientation.Vertical){
-        contents += new Label("Palavras encontradas:") //Aparece para o usuário as palavras encontradas
-        contents += Swing.VStrut(10)
-        contents += labelWord
+      contents += new Label("Total de palavras:") //Usando a função TotalWords, a quantidade de palavra total
+      contents += Swing.HStrut(10)
+      contents += new Label{
+        text = TotalWords(fillLabelsInteger(m)).toString
       }
-      contents += Swing.HStrut(50)
-      contents += new BoxPanel(Orientation.Vertical){
-        contents += new Label("Número de vezes encontradas:") //E a qtdade de vezes que elas apareceram
-        contents += Swing.VStrut(10)
-        contents += labelTimes
-      }
-    }
-    contents += Swing.VStrut(30)
-    contents += new Label("Total de palavras:") //Usando a função TotalWords, a quantidade de palavra total
-    contents += Swing.HStrut(10)
-    contents += new Label{
-      text = TotalWords(fillLabelsInteger(m)).toString
-    }
-    contents += Swing.VStrut(30)
-    contents += new Label("Palavra com maior frequência:") //Usando a função MostCommon, a palavra mais frequente aparece aqui
-    contents += Swing.HStrut(10)
-    contents += new Label{
-      text = valueM((fillLabelsString(m)).lift(fillLabelsInteger(m).indexOf(MostCommon(fillLabelsInteger(m))))) +
-      "    " + MostCommon(fillLabelsInteger(m))
     }
     contents += Swing.VStrut(15)
-    contents += new Label("Palavra com mais letras:") //Usando a função Largest, a maior palavra aparece aqui
-    contents += Swing.HStrut(10)
-    contents += new Label{
-      text = valueM(Map(fillLabelsString(m) map { s => (s.length,s) } : _*).get(Largest(fillLabelsString(m)))) +
-      "    " + Largest(fillLabelsString(m))
-    } 
+    contents += new BoxPanel(Orientation.Horizontal){
+      contents += new Label("Total de palavras diferentes:") //Usando a função TotalWords, a quantidade de palavra total
+      contents += Swing.HStrut(10)
+      contents += new Label{
+        text = (fillLabelsInteger(m).length).toString
+      }
+    }
+    contents += Swing.VStrut(15)
+    contents += new BoxPanel(Orientation.Horizontal){
+      contents += new Label("Palavra com maior frequência:") //Usando a função MostCommon, a palavra mais frequente aparece aqui
+      contents += Swing.HStrut(10)
+      contents += new Label{
+        text = valueM((fillLabelsString(m)).lift(fillLabelsInteger(m).indexOf(MostCommon(fillLabelsInteger(m))))) +
+        "    " + MostCommon(fillLabelsInteger(m))
+      }
+    }
+    contents += Swing.VStrut(15)
+    contents += new BoxPanel(Orientation.Horizontal){
+      contents += new Label("Palavra com mais letras:") //Usando a função Largest, a maior palavra aparece aqui
+      contents += Swing.HStrut(10)
+      contents += new Label{
+        text = valueM(Map(fillLabelsString(m) map { s => (s.length,s) } : _*).get(Largest(fillLabelsString(m)))) +
+        "    " + Largest(fillLabelsString(m))
+      }
+    }
     for(e<-contents)
       e.xLayoutAlignment = 0
     border = Swing.EmptyBorder(15,15,15,15)
